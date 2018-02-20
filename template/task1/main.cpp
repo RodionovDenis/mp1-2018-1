@@ -1,83 +1,92 @@
 #include <iostream>
-#define CONST_PHARMACY_POUND 2,2679
-#define CONST_TROY_OUNCE 35,2739
-#define CONST_POOD 0,061
+#include <locale.h>
 
 using namespace std;
 
+class TWeighingScales
+{
+private:
+	double kg; // вес в киллограммах
+public:
+	TWeighingScales(double _kg = 0)// конструктор
+	{
+		kg = _kg;
+	}
+	TWeighingScales & operator=(const TWeighingScales & kg1) //оператор присваивания
+	{
+		kg = kg1.kg;
+		return *this;
+	}
+	void display() //вывод на экран
+	{
+		cout << "Вес в киллограммах: " << kg << endl;
+	}
+	double killograms() //содержит вес в киллограммах
+	{
+		return kg;
+	}
+	double pharmacyPound() //преобразование в аптечный фунд 
+	{
+		return kg * 2.2679;
+	}
+
+	double troyOunce() // преобразование в тройскую унцию 
+	{
+		return kg * 35.2739;
+	}
+	double pood() // преобразование в пуд 
+	{
+		return kg * 0.061;
+	}
+	void displayPharmacyPound()
+	{
+		cout << "Вес в единице измерения аптечный фунд:" << pharmacyPound() << endl;
+	}
+	void displayTroyOunce()
+	{
+		cout << "Вес в единице измерения тройская унция:" << troyOunce() << endl;
+	}
+	void displayPood()
+	{
+		cout << "Вес в единице измерения пуд:" << pood() << endl;
+	}
+};
+
+
 int main()
 {
-	class TWeighing_scales
+	setlocale(LC_ALL, "Russian");
+	double flag;
+	int a, b;
+metka2:cout << "Введите вес в киллограммах:";
+	cin >> flag;
+	TWeighingScales weight1, weight2(flag);
+	weight1.operator=(weight2);
+metka3:cout << "\n Выберите действие:\n" << endl;
+	cout << "1. Узнать текущий вес в килограммах\n" << endl;
+	cout << "2. Узнать вес в выбранной единице измерения\n" << endl;
+	cout << "3. Изменить вес в килограммах\n" << endl;
+	cin >> a;
+	switch (a)
 	{
-	private:
-		double kg; // вес в киллограммах
-	public:
-		TWeighing_scales(double _kg)// конструктор
+	case 1: weight2.display(); break;
+	case 2:
+	{
+	metka1:cout << "В какой единице измерения вы предпочитаете узнать вес?\n" << endl;
+		cout << "1. Аптечный фунд" << endl;
+		cout << "2. Тройская унция" << endl;
+		cout << "3. Пуд" << endl;
+		cin >> b;
+		switch (b)
 		{
-			kg = _kg;
+		case 1: weight2.displayPharmacyPound(); break;
+		case 2: weight2.displayTroyOunce(); break;
+		case 3: weight2.displayPood(); break;
+		default: cout << "Некорректный ввод. Повторите попытку.\n"; goto metka1;
 		}
-		TWeighing_scales & operator=(TWeighing_scales & kg1) //оператор присваивания
-		{
-			kg = kg1.kg;
-			return *this;
-		}
-		void withdraw() //вывод себя на экран
-		{
-			cout << "weight: " << kg << endl;
-		}
-		void pharmacy_pound() //преобразование в аптечный фунд
-		{
-			kg = kg * CONST_PHARMACY_POUND;
-		}
-		void troy_ounce() // преобразование в тройскую унцию
-		{
-			kg = kg * CONST_TROY_OUNCE;
-		}
-		void pood() // преобразование в пуд
-		{
-			kg = kg * CONST_POOD;
-		}
-		void transfer_kg(int flag) // установка в кг: пользователь должен указать, в какой единице измерения переменная класса находится:1-апт.фунд 2-унция 3-пуд 
-		{
-
-			switch (flag)
-			{
-			case 1:
-				kg = kg / CONST_PHARMACY_POUND;
-				break;
-			case 2:
-				kg = kg / CONST_TROY_OUNCE;
-				break;
-			case 3:
-				kg = kg / CONST_POOD;
-				break;
-			}
-
-		}
-		void discover_kg(int flag) // узнать вес в кг. Переменная флаг работает аналогично
-		{
-
-			switch (flag)
-			{
-			case 1: cout << "weight in kilograms: " << (kg / CONST_PHARMACY_POUND) << endl;
-				break;
-			case 2: cout << "weight in kilograms: " << (kg / CONST_TROY_OUNCE) << endl;
-				break;
-			case 3: cout << "weight in kilograms: " << (kg / CONST_POOD) << endl;
-				break;
-			}
-		}
-		void selected_unit(int flag) // функция узнает вес в выбранной единице измерения. По умолчанию находимся в кг.  1-апт.фунд 2-унция 3-пуд
-		{
-			switch (flag)
-			{
-			case 1: cout << "weight in pharmacy pound: " << (kg * CONST_PHARMACY_POUND) << endl;
-				break;
-			case 2: cout << "weight in troy ounce: " << (kg * CONST_TROY_OUNCE) << endl;
-				break;
-			case 3: cout << "weight in pood: " << (kg * CONST_POOD) << endl;
-				break;
-			}
-		}
-	};
+		break;
+	}
+	case 3: goto metka2;
+	default: cout << "Некорректный ввод. Повторите попытку.\n"; goto metka3;
+	}
 }
