@@ -17,12 +17,11 @@ public:
 		kg = kg1.kg;
 		return *this;
 	}
-	void setWeight(double kgset) //set weight 
+	void setWeight(double _kg) //set weight 
 	{
-		double *kgptr = &kg;
-		*kgptr = kgset;
+		kg = _kg;
 	}
-	void learn() // output on display
+	void print() // output on display
 	{
 		cout << "Weight in kg: " << kg << endl;
 	}
@@ -43,15 +42,15 @@ public:
 	{
 		return kg * 0.061;
 	}
-	void learnPharmacyPound()
+	void printPharmacyPound()
 	{
 		cout << "Weight in pharmacy pound:" << pharmacyPound() << endl;
 	}
-	void learnTroyOunce()
+	void printTroyOunce()
 	{
 		cout << "Weight in troy ounce:" << troyOunce() << endl;
 	}
-	void learnPood()
+	void printPood()
 	{
 		cout << "Weight in pood:" << pood() << endl;
 	}
@@ -70,13 +69,13 @@ metka2:cout << "Enter the weight in kilograms:";
 	weight2.setWeight(flag);
 
 metka3:cout << "\n Select an action:\n" << endl;
-	cout << "1. Learn the current weight in kilograms\n" << endl;
-	cout << "2. Learn the weight of the selected unit\n" << endl;
+	cout << "1. Display the current weight in kilograms\n" << endl;
+	cout << "2. Display the weight of the selected unit\n" << endl;
 	cout << "3. Change the weight in kilograms\n" << endl;
 	cin >> a;
 	switch (a)
 	{
-	case 1: weight2.learn(); break;
+	case 1: weight2.print(); break;
 	case 2:
 	{
 	metka1:cout << "In which unit of measurement do you prefer to know the weight?\n" << endl;
@@ -86,9 +85,9 @@ metka3:cout << "\n Select an action:\n" << endl;
 		cin >> b;
 		switch (b)
 		{
-		case 1: weight2.learnPharmacyPound(); break;
-		case 2: weight2.learnTroyOunce(); break;
-		case 3: weight2.learnPood(); break;
+		case 1: weight2.printPharmacyPound(); break;
+		case 2: weight2.printTroyOunce(); break;
+		case 3: weight2.printPood(); break;
 		default: cout << "Incorrect entry. Please try again.\n"; goto metka1;
 		}
 		break;
