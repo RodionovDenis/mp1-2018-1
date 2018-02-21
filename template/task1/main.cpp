@@ -19,7 +19,7 @@ public:
 	}
 	void display() // output on display
 	{
-		cout << "Вес в киллограммах: " << kg << endl;
+		cout << "Weight in kg: " << kg << endl;
 	}
 	double killograms() 
 	{
@@ -40,15 +40,15 @@ public:
 	}
 	void displayPharmacyPound()
 	{
-		cout << "Вес в единице измерения аптечный фунд:" << pharmacyPound() << endl;
+		cout << "Weight in pharmacy pound:" << pharmacyPound() << endl;
 	}
 	void displayTroyOunce()
 	{
-		cout << "Вес в единице измерения тройская унция:" << troyOunce() << endl;
+		cout << "Weight in troy ounce:" << troyOunce() << endl;
 	}
 	void displayPood()
 	{
-		cout << "Вес в единице измерения пуд:" << pood() << endl;
+		cout << "Weight in pood:" << pood() << endl;
 	}
 };
 
