@@ -95,4 +95,5 @@ metka3:cout << "\n Select an action:\n" << endl;
 	case 3: goto metka2;
 	default: cout << "Incorrect entry. Please try again.\n"; goto metka3;
 	}
+	system("pause");
 }
