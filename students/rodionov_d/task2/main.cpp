@@ -14,12 +14,16 @@ private:
 public:
 	TString(char *s = 0) //конструктор
 	{
-		len = strlen(s);
 		if (s)
-			str = new char[len + 1];
+		{
+			str = new char[strlen(s) + 1];
+			strcpy(str, s);
+			len = strlen(s);
+		}
 		else
 			str = new char;
-		strcpy(str, s);
+
+
 	}
 	TString(const TString &s) //контсруктор копирования
 	{
@@ -31,21 +35,18 @@ public:
 	{
 		delete[] str;
 	}
-	TString operator = (const TString &s) //оператор присваивания
+	TString & operator = (const TString &s) //оператор присваивания
 	{
 		if (this == &s)
 			return *this;
-		else if (len != s.len)
+		if (len != s.len)
 		{
 			delete[] str;
 			str = new char[s.len + 1];
 		}
-		else;
 		strcpy(str, s.str);
 		len = s.len;
 		return *this;
-
-
 	}
 	void Print() //вывод строки на экран
 	{
@@ -53,7 +54,7 @@ public:
 			cout << *(str + i);
 		cout << endl;
 	}
-	void setString(char * _s) //задать строку
+	void setString(char *_s) //задать строку
 	{
 		if (_s)
 			str = new char[strlen(_s) + 1];
@@ -62,36 +63,20 @@ public:
 		len = strlen(_s);
 		strcpy(str, _s);
 	}
-	void length() //узнать длину строки
+	int length() //узнать длину строки
 	{
-		cout << "Длина строки:" << len << endl;
+		return len;
 	}
-	void symbol(int index) //получить символ строки по его индексу
+	char symbol(int index) //получить символ строки по его индексу
 	{
-		cout << "Символ строки по индексу " << index << ":" << *(str + index - 1) << endl;
+		return *(str + index - 1);
 	}
 	void changeSymbol(int index, char symbol) //изменить строку по заданному символу
 	{
 		*(str + index - 1) = symbol;
 	}
-	void substring(int start, int finish) //выделение подстроки из строки
+	bool palindrome() //является ли строка палиндромом?
 	{
-		if (start > len && finish > len)
-			cout << "Некорректный ввод границ подстроки" << endl;
-		else
-		{
-			cout << "Подстрока с указанным диапазоном:";
-			for (start; start < finish + 1; start++)
-			{
-				cout << *(str + start - 1);
-			}
-			cout << endl;
-		}
-	}
-	void palindrome() //является ли строка палиндромом?
-	{
-
-
 		char *flag1, *flag2;
 		int number = 0;
 		flag1 = str;
@@ -101,13 +86,9 @@ public:
 			if (*flag1 == *flag2)
 				number++;
 		}
-		if (number == len / 2)
-			cout << "Строка - палиндром" << endl;
-		else
-			cout << "Строка - не палиндром" << endl;
-
+		return number == len / 2;
 	}
-	void differentSymbol() //узнать, сколько разных различных букв в алфавите
+	int differentSymbol() //узнать, сколько различных букв в алфавите
 	{
 		int number = 1;
 		int flag;
@@ -128,7 +109,7 @@ public:
 			if (flag == i)
 				number++;
 		}
-		cout << "Количество разных символов:" << number << endl;
+		return number;
 	}
 };
 
@@ -138,9 +119,9 @@ int main()
 	int a, b, c, d;
 	char k;
 	setlocale(LC_ALL, "Russian");
-	TString s2("example");
+	TString s2;
 	TString s1("test");
-	s1 = s2; // проверка работы оператора присваивания
+	s2 = s1; // проверка работы оператора присваивания
 	cout << "Введите строку:";
 	gets_s(string);
 	s2.setString(string);
@@ -156,24 +137,45 @@ int main()
 	switch (a)
 	{
 	case 1: s2.Print(); break;
-	case 2: s2.palindrome(); break;
-	case 3:s2.differentSymbol(); break;
+	case 2:
+	{
+		if (s2.palindrome() == 0)
+			cout << "Строка не палиндром" << endl;
+		else
+			cout << "Строка - палиндром" << endl;
+		break;
+	}
+	case 3:
+	{
+		cout << "Количество разных символов в строке:" << s2.differentSymbol() << endl;
+		break;
+	}
 	case 4:
 	{
 		cout << "Введите границы подстроки:" << endl;
-		cout << "start:";
+		cout << "Начало(включительно):";
 		cin >> b;
-		cout << "finish:";
+		cout << "Конец(включительно):";
 		cin >> c;
-		s2.substring(b, c);
+		for (int i = b; i <c + 1; i++)
+		{
+			cout << s2.symbol(i);
+		}
+		cout << endl;
+
+
 		break;
 	}
-	case 5: s2.length(); break;
+	case 5:
+	{
+		cout << "Длина строки:" << s2.length() << endl;
+		break;
+	}
 	case 6:
 	{
 		cout << "Введите индекс строки:";
 		cin >> c;
-		s2.symbol(c);
+		cout << "Символ строки по заданному индексу:" << s2.symbol(c) << endl;
 		break;
 	}
 	case 7:
@@ -184,7 +186,6 @@ int main()
 		cin >> k;
 		s2.changeSymbol(d, k);
 		s2.Print();
-		break;
 	}
 	}
 	system("pause");
