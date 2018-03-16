@@ -1,272 +1,191 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
+#include <cstring>
 #include <clocale>
-#include <cmath>
 
 using namespace std;
 
-long factorial(int number) //факториал для вычисления формулы
-{
-	long factorial = 1;
-	for (int i = 1; i <= number; i++)
-		factorial = factorial * i;
-	return factorial;
-}
-
-class TTeilorFormuls
+class TString
 {
 private:
-	int NumberFunction; //номер выбранной функции 1-sin, 2-cos, 3-exp.
-	double x; //вычисление функции в точке х.
-	int n; //количество членов.
-
+	char *str;
+	int len;
 public:
-	TTeilorFormuls(int _NumberFunction = 0, double _x = 0, int _n = 0) //конструктор
+	TString(char *s = 0) //конструктор
 	{
-		NumberFunction = _NumberFunction;
-		x = _x;
-		n = _n;
+		if (s)
+		{
+			str = new char[strlen(s) + 1];
+			strcpy(str, s);
+			len = strlen(s);
+		}
+		else
+			str = new char;
+
+
 	}
-	~TTeilorFormuls() //деструктор
-	{}
-	TTeilorFormuls(TTeilorFormuls & fun) //конструктор копирования
+	TString(const TString &s) //контсруктор копирования
 	{
-		NumberFunction = fun.NumberFunction;
-		x = fun.x;
-		n = fun.n;
+		len = s.len;
+		str = new char[len + 1];
+		strcpy(str, s.str);
 	}
-	TTeilorFormuls & operator=(const TTeilorFormuls &fun)
+	~TString() //деструктор
 	{
-		NumberFunction = fun.NumberFunction;
-		x = fun.x;
-		n = fun.n;
+		delete[] str;
+	}
+	TString & operator = (const TString &s) //оператор присваивания
+	{
+		if (this == &s)
+			return *this;
+		if (len != s.len)
+		{
+			delete[] str;
+			str = new char[s.len + 1];
+		}
+		strcpy(str, s.str);
+		len = s.len;
 		return *this;
 	}
-	void SetFunction(int number) //задать функцию
+	void Print() //вывод строки на экран
 	{
-		if (number != 1 && number != 2 && number != 3)
-			throw number;
-		NumberFunction = number;
-
+		for (int i = 0; i < len; i++)
+			cout << *(str + i);
+		cout << endl;
 	}
-	int DiscoverFunction() //узнать функцию
+	void setString(char *_s) //задать строку
 	{
-		return NumberFunction;
+		if (_s)
+			str = new char[strlen(_s) + 1];
+		else
+			str = new char;
+		len = strlen(_s);
+		strcpy(str, _s);
 	}
-	void SetMemberSeries(int number) //задать число рядов
+	int length() //узнать длину строки
 	{
-		if (number < 0)
-			throw number;
-		n = number;
+		return len;
 	}
-	int DiscoverMemberSeries() //узнать число рядов
+	char symbol(int index) //получить символ строки по его индексу
 	{
-		return n;
+		return *(str + index - 1);
 	}
-	void SetX(double number) //задать точку вычисления
+	void changeSymbol(int index, char symbol) //изменить строку по заданному символу
 	{
-		x = number;
+		*(str + index - 1) = symbol;
 	}
-	double DiscoverX() //узнать точку вычисления
+	bool palindrome() //является ли строка палиндромом?
 	{
-		return x;
+		char *flag1, *flag2;
+		int number = 0;
+		flag1 = str;
+		flag2 = str + strlen(str) - 1;
+		for (flag1, flag2; flag1 < flag2; flag1++, flag2--)
+		{
+			if (*flag1 == *flag2)
+				number++;
+		}
+		return number == len / 2;
 	}
-	friend void FormulaMember(TTeilorFormuls & fun); //формула ряда, использую дружественность
-	double ValueMember(int number) //значение заданного члена ряда
+	int differentSymbol() //узнать, сколько различных букв в алфавите
 	{
-		switch (NumberFunction)
+		int number = 1;
+		int flag;
+		for (int i = 1; i < len; i++)
 		{
-		case 1:
-		{
-			return pow(x, 2 * number - 1) / factorial(2 * number - 1);
+			flag = 0;
+			if (*(str + i) == ' ')
+				continue;
+			else
+			{
+				for (int j = 0; j < i; j++)
+				{
+					if (*(str + i) != *(str + j))
+						flag++;
+					else;
+				}
+			}
+			if (flag == i)
+				number++;
 		}
-		case 2:
-		{
-			return pow(x, 2 * number - 2) / factorial(2 * number - 2);
-		}
-		case 3:
-		{
-			return pow(x, number - 1) / factorial(number - 1);
-		}
-		}
-
+		return number;
 	}
-	double ValueSeries() //значение ряда в выбранной точке х.
-	{
-		double value = 0.0;
-		switch (NumberFunction)
-		{
-		case 1:
-		{
-			for (int i = 0; i < n; i++)
-				value = value + pow(-1, i) * pow(x, 2 * i + 1) / factorial(2 * i + 1);
-			break;
-		}
-		case 2:
-		{
-			for (int i = 0; i < n; i++)
-				value = value + pow(-1, i) * pow(x, 2 * i) / factorial(2 * i);
-			break;
-		}
-		case 3:
-		{
-			for (int i = 0; i < n; i++)
-				value = value + pow(x, i) / factorial(i);
-			break;
-		}
-		}
-		return value;
-	}
-	double Fault() //отклонение значения ряда в выбранной точке от эталонного значения текущей функции в данной точке.
-	{
-		switch (NumberFunction)
-		{
-		case 1:
-		{
-			return abs(sin(x) - (*this).ValueSeries());
-		}
-		case 2:
-		{
-			return abs(cos(x) - (*this).ValueSeries());
-		}
-		case 3:
-		{
-			return abs(exp(x) - (*this).ValueSeries());
-		}
-		}
-	}
-
 };
-
-void FormulaMember(TTeilorFormuls & fun) //формула ряда
-{
-	switch (fun.NumberFunction)
-	{
-	case 1:
-	{
-		cout << "sin(x) = ";
-		for (int i = 0; i <fun.n; i = i++)
-		{
-			if (i % 2 == 0)
-				cout << " + ";
-			else
-				cout << " - ";
-			cout << "x^" << 2 * i + 1 << "/" << 2 * i + 1 << "!";
-		}
-		cout << endl;
-		break;
-	}
-	case 2:
-	{
-		cout << "cos(x) = ";
-		for (int i = 0; i <fun.n; i++)
-		{
-			if (i % 2 == 0)
-				cout << " + ";
-			else
-				cout << " - ";
-			cout << "x^" << 2 * i << "/" << 2 * i << "!";
-		}
-		cout << endl;
-		break;
-	}
-	case 3:
-	{
-		cout << "exp(x) = ";
-		for (int i = 0; i < fun.n; i++)
-		{
-			cout << " + x^" << i << "/" << i << "!";
-		}
-		cout << endl;
-		break;
-		break;
-	}
-	default:
-	{
-		cout << "Некорректный ввод." << endl;
-	}
-	}
-}
 
 int main()
 {
-	setlocale(LC_ALL, "Russian");
+	char string[40];
 	int a, b, c, d;
-	double x0;
-	TTeilorFormuls f1(1, 1, 7), f2(2, 3, 5), f3;
-	f1 = f2; //проверка присваивания
-	cout << "Выберите функцию:\n" << endl;
-	cout << "1.sin" << endl;
-	cout << "2.cos" << endl;
-	cout << "3.exp" << endl;
-	try
+	char k;
+	setlocale(LC_ALL, "Russian");
+	TString s2;
+	TString s1("test");
+	s2 = s1; // проверка работы оператора присваивания
+	cout << "Введите строку:";
+	gets_s(string);
+	s2.setString(string);
+	cout << "Выберите дальнейшее действие:\n" << endl;
+	cout << "1.Вывести строку на экран" << endl;
+	cout << "2.Проверить строку на палиндром" << endl;
+	cout << "3.Узнать количество разных символов в строке" << endl;
+	cout << "4.Выделить подстроку из строки" << endl;
+	cout << "5.Узнать длину строки" << endl;
+	cout << "6.Получить символ строки по его индексу" << endl;
+	cout << "7.Изменить строку по заданному символу" << endl;
+	cin >> a;
+	switch (a)
 	{
-		cin >> a;
-		f3.SetFunction(a);
-		cout << "\nЗадайте точку вычисления:";
-		cin >> x0;
-		f3.SetX(x0);
-		cout << "\nВведите количество членов ряда:";
-		cin >> b;
-		f3.SetMemberSeries(b);
-	}
-	catch (...)
-	{
-		cout << "Объект поврежден." << endl;
-		return 1;
-	}
-	cout << "\n Выберите дальнейшее действие:" << endl;
-	cout << "1. Узнать функцию" << endl;
-	cout << "2. Узнать число рядов" << endl;
-	cout << "3. Узнать точку вычисления" << endl;
-	cout << "4. Вывести формулу ряда" << endl;
-	cout << "5. Узнать значение конкретного члена ряда" << endl;
-	cout << "6. Узнать значение ряда в выбранной точке" << endl;
-	cout << "7. Рассчитать отклонение от эталонного значения" << endl;
-	cin >> c;
-	switch (c)
-	{
-	case 1:
-	{
-		if (f3.DiscoverFunction() == 1)
-			cout << "Текущая функция - sin(x)" << endl;
-		if (f3.DiscoverFunction() == 2)
-			cout << "Текущая функция - cos(x)" << endl;
-		if (f3.DiscoverFunction() == 3)
-			cout << "Текущая функция - exp(x)" << endl;
-		break;
-	}
+	case 1: s2.Print(); break;
 	case 2:
 	{
-		cout << "Число рядов - " << f3.DiscoverMemberSeries() << endl;
+		if (s2.palindrome() == 0)
+			cout << "Строка не палиндром" << endl;
+		else
+			cout << "Строка - палиндром" << endl;
 		break;
 	}
 	case 3:
 	{
-		cout << "Точка вычисления - " << f3.DiscoverX() << endl;
+		cout << "Количество разных символов в строке:" << s2.differentSymbol() << endl;
 		break;
 	}
 	case 4:
 	{
-		cout << "\n Формула ряда:" << endl;
-		FormulaMember(f3);
+		cout << "Введите границы подстроки:" << endl;
+		cout << "Начало(включительно):";
+		cin >> b;
+		cout << "Конец(включительно):";
+		cin >> c;
+		for (int i = b; i <c + 1; i++)
+		{
+			cout << s2.symbol(i);
+		}
+		cout << endl;
+
+
 		break;
 	}
 	case 5:
 	{
-		cout << "\n Введите член ряда, который нужно рассчитать:";
-		cin >> d;
-		cout << "Значение ряда под номером " << d << " в точке " << f3.DiscoverX() << " = " << f3.ValueMember(d) << endl;
+		cout << "Длина строки:" << s2.length() << endl;
 		break;
 	}
 	case 6:
 	{
-		cout << "\n Значение ряда заданной функции в точке " << f3.DiscoverX() << " = " << f3.ValueSeries() << endl;
+		cout << "Введите индекс строки:";
+		cin >> c;
+		cout << "Символ строки по заданному индексу:" << s2.symbol(c) << endl;
 		break;
 	}
 	case 7:
 	{
-		cout << "Отклонение от эталонного значения: " << f3.Fault() << endl;
-		break;
+		cout << "Введите индекс:" << endl;
+		cin >> d;
+		cout << "Введите символ:" << endl;
+		cin >> k;
+		s2.changeSymbol(d, k);
+		s2.Print();
 	}
 	}
 	system("pause");
