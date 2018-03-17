@@ -1,34 +1,30 @@
 #include <iostream>
 #include <clocale>
 #include <cmath>
-
 using namespace std;
-
-long factorial(int number) //С„Р°РєС‚РѕСЂРёР°Р» РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ С„РѕСЂРјСѓР»С‹
+long factorial(int number) //факториал для вычисления формулы
 {
 	long factorial = 1;
 	for (int i = 1; i <= number; i++)
 		factorial = factorial * i;
 	return factorial;
 }
-
 class TTeilorFormuls
 {
 private:
-	int NumberFunction; //РЅРѕРјРµСЂ РІС‹Р±СЂР°РЅРЅРѕР№ С„СѓРЅРєС†РёРё 1-sin, 2-cos, 3-exp.
-	double x; //РІС‹С‡РёСЃР»РµРЅРёРµ С„СѓРЅРєС†РёРё РІ С‚РѕС‡РєРµ С….
-	int n; //РєРѕР»РёС‡РµСЃС‚РІРѕ С‡Р»РµРЅРѕРІ.
-
+	int NumberFunction; //номер выбранной функции 1-sin, 2-cos, 3-exp.
+	double x; //вычисление функции в точке х.
+	int n; //количество членов.
 public:
-	TTeilorFormuls(int _NumberFunction = 0, double _x = 0, int _n = 0) //РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+	TTeilorFormuls(int _NumberFunction = 0, double _x = 0, int _n = 0) //конструктор
 	{
 		NumberFunction = _NumberFunction;
 		x = _x;
 		n = _n;
 	}
-	~TTeilorFormuls() //РґРµСЃС‚СЂСѓРєС‚РѕСЂ
+	~TTeilorFormuls() //деструктор
 	{}
-	TTeilorFormuls(TTeilorFormuls & fun) //РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєРѕРїРёСЂРѕРІР°РЅРёСЏ
+	TTeilorFormuls(TTeilorFormuls & fun) //конструктор копирования
 	{
 		NumberFunction = fun.NumberFunction;
 		x = fun.x;
@@ -41,37 +37,36 @@ public:
 		n = fun.n;
 		return *this;
 	}
-	void SetFunction(int number) //Р·Р°РґР°С‚СЊ С„СѓРЅРєС†РёСЋ
+	void SetFunction(int number) //задать функцию
 	{
 		if (number != 1 && number != 2 && number != 3)
 			throw number;
 		NumberFunction = number;
-
 	}
-	int DiscoverFunction() //СѓР·РЅР°С‚СЊ С„СѓРЅРєС†РёСЋ
+	int DiscoverFunction() //узнать функцию
 	{
 		return NumberFunction;
 	}
-	void SetMemberSeries(int number) //Р·Р°РґР°С‚СЊ С‡РёСЃР»Рѕ СЂСЏРґРѕРІ
+	void SetMemberSeries(int number) //задать число рядов
 	{
 		if (number < 0)
 			throw number;
 		n = number;
 	}
-	int DiscoverMemberSeries() //СѓР·РЅР°С‚СЊ С‡РёСЃР»Рѕ СЂСЏРґРѕРІ
+	int DiscoverMemberSeries() //узнать число рядов
 	{
 		return n;
 	}
-	void SetX(double number) //Р·Р°РґР°С‚СЊ С‚РѕС‡РєСѓ РІС‹С‡РёСЃР»РµРЅРёСЏ
+	void SetX(double number) //задать точку вычисления
 	{
 		x = number;
 	}
-	double DiscoverX() //СѓР·РЅР°С‚СЊ С‚РѕС‡РєСѓ РІС‹С‡РёСЃР»РµРЅРёСЏ
+	double DiscoverX() //узнать точку вычисления
 	{
 		return x;
 	}
-	friend void FormulaMember(TTeilorFormuls & fun); //С„РѕСЂРјСѓР»Р° СЂСЏРґР°, РёСЃРїРѕР»СЊР·СѓСЋ РґСЂСѓР¶РµСЃС‚РІРµРЅРЅРѕСЃС‚СЊ
-	double ValueMember(int number) //Р·РЅР°С‡РµРЅРёРµ Р·Р°РґР°РЅРЅРѕРіРѕ С‡Р»РµРЅР° СЂСЏРґР°
+	friend void FormulaMember(TTeilorFormuls & fun); //формула ряда, использую дружественность
+	double ValueMember(int number) //значение заданного члена ряда
 	{
 		switch (NumberFunction)
 		{
@@ -88,9 +83,8 @@ public:
 			return pow(x, number - 1) / factorial(number - 1);
 		}
 		}
-
 	}
-	double ValueSeries() //Р·РЅР°С‡РµРЅРёРµ СЂСЏРґР° РІ РІС‹Р±СЂР°РЅРЅРѕР№ С‚РѕС‡РєРµ С….
+	double ValueSeries() //значение ряда в выбранной точке х.
 	{
 		double value = 0.0;
 		switch (NumberFunction)
@@ -116,7 +110,7 @@ public:
 		}
 		return value;
 	}
-	double Fault() //РѕС‚РєР»РѕРЅРµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ СЂСЏРґР° РІ РІС‹Р±СЂР°РЅРЅРѕР№ С‚РѕС‡РєРµ РѕС‚ СЌС‚Р°Р»РѕРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ С‚РµРєСѓС‰РµР№ С„СѓРЅРєС†РёРё РІ РґР°РЅРЅРѕР№ С‚РѕС‡РєРµ.
+	double Fault() //отклонение значения ряда в выбранной точке от эталонного значения текущей функции в данной точке.
 	{
 		switch (NumberFunction)
 		{
@@ -134,10 +128,8 @@ public:
 		}
 		}
 	}
-
 };
-
-void FormulaMember(TTeilorFormuls & fun) //С„РѕСЂРјСѓР»Р° СЂСЏРґР°
+void FormulaMember(TTeilorFormuls & fun) //формула ряда
 {
 	switch (fun.NumberFunction)
 	{
@@ -182,92 +174,105 @@ void FormulaMember(TTeilorFormuls & fun) //С„РѕСЂРјСѓР»Р° СЂСЏРґР°
 	}
 	default:
 	{
-		cout << "РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ РІРІРѕРґ." << endl;
+		cout << "Некорректный ввод." << endl;
 	}
 	}
 }
-
 int main()
 {
 	setlocale(LC_ALL, "Russian");
 	int a, b, c, d;
+	int check = 0;
 	double x0;
 	TTeilorFormuls f1(1, 1, 7), f2(2, 3, 5), f3;
-	f1 = f2; //РїСЂРѕРІРµСЂРєР° РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
-	cout << "Р’С‹Р±РµСЂРёС‚Рµ С„СѓРЅРєС†РёСЋ:\n" << endl;
-	cout << "1.sin" << endl;
-	cout << "2.cos" << endl;
-	cout << "3.exp" << endl;
-	try
+	f1 = f2; //проверка присваивания
+	cout << "Выберите функцию:\n" << endl;
+	cout << "1.sin(x)" << endl;
+	cout << "2.cos(x)" << endl;
+	cout << "3.exp(x)" << endl;
+	cin >> a;
+	while (check == 0)
 	{
-		cin >> a;
-		f3.SetFunction(a);
-		cout << "\nР—Р°РґР°Р№С‚Рµ С‚РѕС‡РєСѓ РІС‹С‡РёСЃР»РµРЅРёСЏ:";
-		cin >> x0;
-		f3.SetX(x0);
-		cout << "\nР’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ С‡Р»РµРЅРѕРІ СЂСЏРґР°:";
-		cin >> b;
-		f3.SetMemberSeries(b);
-	}
-	catch (...)
-	{
-		cout << "РћР±СЉРµРєС‚ РїРѕРІСЂРµР¶РґРµРЅ." << endl;
-		return 1;
-	}
-	cout << "\n Р’С‹Р±РµСЂРёС‚Рµ РґР°Р»СЊРЅРµР№С€РµРµ РґРµР№СЃС‚РІРёРµ:" << endl;
-	cout << "1. РЈР·РЅР°С‚СЊ С„СѓРЅРєС†РёСЋ" << endl;
-	cout << "2. РЈР·РЅР°С‚СЊ С‡РёСЃР»Рѕ СЂСЏРґРѕРІ" << endl;
-	cout << "3. РЈР·РЅР°С‚СЊ С‚РѕС‡РєСѓ РІС‹С‡РёСЃР»РµРЅРёСЏ" << endl;
-	cout << "4. Р’С‹РІРµСЃС‚Рё С„РѕСЂРјСѓР»Сѓ СЂСЏРґР°" << endl;
-	cout << "5. РЈР·РЅР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ С‡Р»РµРЅР° СЂСЏРґР°" << endl;
-	cout << "6. РЈР·РЅР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ СЂСЏРґР° РІ РІС‹Р±СЂР°РЅРЅРѕР№ С‚РѕС‡РєРµ" << endl;
-	cout << "7. Р Р°СЃСЃС‡РёС‚Р°С‚СЊ РѕС‚РєР»РѕРЅРµРЅРёРµ РѕС‚ СЌС‚Р°Р»РѕРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ" << endl;
-	cin >> c;
-	switch (c)
-	{
-	case 1:
-	{
-		if (f3.DiscoverFunction() == 1)
-			cout << "РўРµРєСѓС‰Р°СЏ С„СѓРЅРєС†РёСЏ - sin(x)" << endl;
-		if (f3.DiscoverFunction() == 2)
-			cout << "РўРµРєСѓС‰Р°СЏ С„СѓРЅРєС†РёСЏ - cos(x)" << endl;
-		if (f3.DiscoverFunction() == 3)
-			cout << "РўРµРєСѓС‰Р°СЏ С„СѓРЅРєС†РёСЏ - exp(x)" << endl;
-		break;
-	}
-	case 2:
-	{
-		cout << "Р§РёСЃР»Рѕ СЂСЏРґРѕРІ - " << f3.DiscoverMemberSeries() << endl;
-		break;
-	}
-	case 3:
-	{
-		cout << "РўРѕС‡РєР° РІС‹С‡РёСЃР»РµРЅРёСЏ - " << f3.DiscoverX() << endl;
-		break;
-	}
-	case 4:
-	{
-		cout << "\n Р¤РѕСЂРјСѓР»Р° СЂСЏРґР°:" << endl;
-		FormulaMember(f3);
-		break;
-	}
-	case 5:
-	{
-		cout << "\n Р’РІРµРґРёС‚Рµ С‡Р»РµРЅ СЂСЏРґР°, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ СЂР°СЃСЃС‡РёС‚Р°С‚СЊ:";
-		cin >> d;
-		cout << "Р—РЅР°С‡РµРЅРёРµ СЂСЏРґР° РїРѕРґ РЅРѕРјРµСЂРѕРј " << d << " РІ С‚РѕС‡РєРµ " << f3.DiscoverX() << " = " << f3.ValueMember(d) << endl;
-		break;
-	}
-	case 6:
-	{
-		cout << "\n Р—РЅР°С‡РµРЅРёРµ СЂСЏРґР° Р·Р°РґР°РЅРЅРѕР№ С„СѓРЅРєС†РёРё РІ С‚РѕС‡РєРµ " << f3.DiscoverX() << " = " << f3.ValueSeries() << endl;
-		break;
-	}
-	case 7:
-	{
-		cout << "РћС‚РєР»РѕРЅРµРЅРёРµ РѕС‚ СЌС‚Р°Р»РѕРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ: " << f3.Fault() << endl;
-		break;
-	}
+		try
+		{
+			f3.SetFunction(a);
+			cout << "\nЗадайте точку вычисления:";
+			cin >> x0;
+			f3.SetX(x0);
+			cout << "\nВведите количество членов ряда:";
+			cin >> b;
+			f3.SetMemberSeries(b);
+		}
+		catch (...)
+		{
+			cout << "Объект поврежден." << endl;
+			return 1;
+		}
+		cout << "\n Выберите дальнейшее действие:" << endl;
+		cout << "1. Узнать функцию" << endl;
+		cout << "2. Узнать число рядов" << endl;
+		cout << "3. Узнать точку вычисления" << endl;
+		cout << "4. Вывести формулу ряда" << endl;
+		cout << "5. Узнать значение конкретного члена ряда" << endl;
+		cout << "6. Узнать значение ряда в выбранной точке" << endl;
+		cout << "7. Рассчитать отклонение от эталонного значения" << endl;
+		cout << "8. Выйти из программы" << endl;
+		cin >> c;
+		switch (c)
+		{
+		case 1:
+		{
+			if (f3.DiscoverFunction() == 1)
+				cout << "Текущая функция - sin(x)" << endl;
+			if (f3.DiscoverFunction() == 2)
+				cout << "Текущая функция - cos(x)" << endl;
+			if (f3.DiscoverFunction() == 3)
+				cout << "Текущая функция - exp(x)" << endl;
+			break;
+		}
+		case 2:
+		{
+			cout << "Число рядов - " << f3.DiscoverMemberSeries() << endl;
+			break;
+		}
+		case 3:
+		{
+			cout << "Точка вычисления - " << f3.DiscoverX() << endl;
+			break;
+		}
+		case 4:
+		{
+			cout << "\n Формула ряда:" << endl;
+			FormulaMember(f3);
+			break;
+		}
+		case 5:
+		{
+			cout << "\n Введите член ряда, который нужно рассчитать:";
+			cin >> d;
+			cout << "Значение ряда под номером " << d << " в точке " << f3.DiscoverX() << " = " << f3.ValueMember(d) << endl;
+			break;
+		}
+		case 6:
+		{
+			cout << "\n Значение ряда заданной функции в точке " << f3.DiscoverX() << " = " << f3.ValueSeries() << endl;
+			break;
+		}
+		case 7:
+		{
+			cout << "Отклонение от эталонного значения: " << f3.Fault() << endl;
+			break;
+		}
+		case 8:
+		{
+			check = 1;
+			break;
+		}
+		default:
+		{
+			cout << "Некорректный ввод." << endl;
+		}
+		}
 	}
 	system("pause");
 }
