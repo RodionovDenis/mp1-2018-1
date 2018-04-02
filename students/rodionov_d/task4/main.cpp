@@ -15,71 +15,71 @@ struct dataofsong
 class Song
 {
 private:
-	string nameofsong;
+	string name_of_song;
 	string poet;
 	string compouser;
 	string executor;
-	string nameofalbum;
-	dataofsong data;
+	string name_of_album;
+	dataofsong date;
 public:
-	Song(string _nameofsong, string _poet, string _compouser, string _executor, string _nameofalbum, dataofsong _data)//конструктор инициализатор
+	Song(string _name_of_song, string _poet, string _compouser, string _executor, string _name_of_album, dataofsong _date)//конструктор инициализатор
 	{
-		nameofsong = _nameofsong;
+		name_of_song = _name_of_song;
 		poet = _poet;
 		compouser = _compouser;
 		executor = _executor;
-		nameofalbum = _nameofalbum;
-		data = _data;
+		name_of_album = _name_of_album;
+		date = _date;
 	}
 	Song()//конструктор по умолчанию
 	{
-		nameofsong = "";
+		name_of_song = "";
 		poet = "";
 		compouser = "";
 		executor = "";
-		nameofalbum = "";
-		data.number = 0;
-		data.month = 0;
-		data.year = 0;
+		name_of_album = "";
+		date.number = 0;
+		date.month = 0;
+		date.year = 0;
 	}
-	void Change(string _nameofsong, string _poet, string _compouser, string _executor, string _nameofalbum, dataofsong _data)
+	void Change(string _name_of_song, string _poet, string _compouser, string _executor, string _name_of_album, dataofsong _date)
 	{
-		nameofsong = _nameofsong;
+		name_of_song = _name_of_song;
 		poet = _poet;
 		compouser = _compouser;
 		executor = _executor;
-		nameofalbum = _nameofalbum;
-		data = _data;
+		name_of_album = _name_of_album;
+		date = _date;
 	}
 	Song(const Song & s) //конструктор копирования
 	{
-		nameofsong = s.nameofsong;
+		name_of_song = s.name_of_song;
 		poet = s.poet;
 		compouser = s.compouser;
 		executor = s.executor;
-		nameofalbum = s.nameofalbum;
-		data = s.data;
+		name_of_album = s.name_of_album;
+		date = s.date;
 	}
 	Song & operator=(const Song & s)//оператор присваивания
 	{
-		nameofsong = s.nameofsong;
+		name_of_song = s.name_of_song;
 		poet = s.poet;
 		compouser = s.compouser;
 		executor = s.executor;
-		nameofalbum = s.nameofalbum;
-		data = s.data;
+		name_of_album = s.name_of_album;
+		date = s.date;
 		return *this;
 	}
 	bool operator==(const Song & s)
 	{
-		if (nameofsong == s.nameofsong && poet == s.poet && compouser == s.compouser && executor == s.executor)
+		if (name_of_song == s.name_of_song && poet == s.poet && compouser == s.compouser && executor == s.executor)
 			return true;
 		else
 			return false;
 	}
 	bool operator<(Song & s)
 	{
-		if (nameofsong < s.nameofsong)
+		if (name_of_song < s.name_of_song)
 			return true;
 		else
 			return false;
@@ -87,7 +87,7 @@ public:
 	}
 	string GetName()
 	{
-		return nameofsong;
+		return name_of_song;
 	}
 	string GetExecutor()
 	{
@@ -103,11 +103,11 @@ public:
 	}
 	string GetAlbum()
 	{
-		return nameofalbum;
+		return name_of_album;
 	}
 	dataofsong GetData()
 	{
-		return data;
+		return date;
 	}
 };
 class Music
@@ -124,9 +124,18 @@ public:
 		v.push_back(s);
 		sort(v.begin(), v.end());
 	}
-	void ChangeSong(Song & s, string _nameofsong, string _poet, string _compouser, string _executor, string _nameofalbum, dataofsong _data)//изменить выбранную песню
+	void ChangeSong(int number, string _name_of_song, string _poet, string _compouser, string _executor, string _name_of_album, dataofsong _date)//изменить выбранную песню
 	{
-		s.Change(_nameofsong, _poet, _compouser, _executor, _nameofalbum, _data);
+		for (int i = 0; i < v.size(); i++)
+		{
+			if (i + 1 == number)
+			{
+				v[i].Change(_name_of_song, _poet, _compouser, _executor, _name_of_album, _date);
+				break;
+			}
+			else
+				continue;
+		}
 		sort(v.begin(), v.end());
 	}
 	vector <Song> & GetVector() //получить вектор из класса
@@ -139,7 +148,10 @@ public:
 		for (int i = 0; i < v.size(); i++)
 		{
 			if (v[i].GetName() == n && v[i].GetExecutor() == e)
+			{
 				songsearch = v[i];
+				break;
+			}
 			else
 				continue;
 		}
@@ -152,6 +164,8 @@ public:
 		{
 			if (v[i].GetPoet() == p)
 				songspoet.push_back(v[i]);
+			else
+				continue;
 		}
 		return songspoet;
 	}
@@ -162,6 +176,8 @@ public:
 		{
 			if (v[i].GetCompouser() == c)
 				songscompouser.push_back(v[i]);
+			else
+				continue;
 		}
 		return songscompouser;
 	}
@@ -172,6 +188,8 @@ public:
 		{
 			if (v[i].GetExecutor() == e)
 				songsexecutor.push_back(v[i]);
+			else
+				continue;
 		}
 		return songsexecutor;
 	}
@@ -326,8 +344,8 @@ int main()
 	dataofsong d, d1;
 	setlocale(LC_ALL, "Russian");
 	int a, b, k, l, m, check = 1;
-	vector<Song> mymusic, v_copy, v_copy1, p_copy;
-	Music myfavourite(mymusic);
+	vector<Song> my_music, v_copy, v_copy1, p_copy;
+	Music my_favourite(my_music);
 	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
 	while (check)
@@ -391,13 +409,13 @@ int main()
 			cin >> d.month;
 			cout << "Год:";
 			cin >> d.year;
-			Song addsong(n, p, c, e, alb, d);
-			myfavourite.AddSong(addsong);
+			Song add_song(n, p, c, e, alb, d);
+			my_favourite.AddSong(add_song);
 			break;
 		}
 		case 2:
 		{
-			v_copy = myfavourite.GetVector();
+			v_copy = my_favourite.GetVector();
 			cout << endl;
 			cout << "Список введенных песен: /исполнитель/ - /название/ - /дата выхода/" << endl;
 			for (int i = 0; i < v_copy.size(); i++)
@@ -410,17 +428,8 @@ int main()
 			l = 0;
 			cout << "Введите номер песни в списке, корорую хотите изменить:" << endl;
 			cin >> k;
-			for (int i = 1; i <= myfavourite.GetVector().size(); i++)
-			{
-				if (i == k)
-				{
-					l = k;
-					break;
-				}
-				else continue;
-			}
-			if (l == 0)
-				cout << "Такой песни не существует./n" << endl;
+			if (k <= 0 || k > my_favourite.NumberSong())
+				cout << "Такой песни не существует.\n" << endl;
 			else
 			{
 				cout << "Введите новое название песни:";
@@ -463,7 +472,7 @@ int main()
 				cin >> d1.month;
 				cout << "Год:";
 				cin >> d1.year;
-				myfavourite.ChangeSong(myfavourite.GetVector()[l - 1], n1, p1, c1, e1, alb1, d1);
+				my_favourite.ChangeSong(k, n1, p1, c1, e1, alb1, d1);
 			}
 			break;
 		}
@@ -474,7 +483,7 @@ int main()
 			getline(cin, n);
 			cout << "Введите исполнителя:";
 			getline(cin, e);
-			Song s1 = myfavourite.Search(n, e);
+			Song s1 = my_favourite.Search(n, e);
 			cout << "Найденная песня: /название/ - /исполнитель/ - /поэт/ - /композитор/ - /альбом/ - /дата/" << endl;
 			cout << s1.GetName() << " - " << s1.GetExecutor() << " - " << s1.GetPoet() << " - " << s1.GetCompouser() << " - " << s1.GetAlbum() << " - " << s1.GetData().number << "." << s1.GetData().month << "." << s1.GetData().year << endl;
 			break;
@@ -484,7 +493,7 @@ int main()
 			cout << "Введите поэта:";
 			cin.ignore();
 			getline(cin, p1);
-			p_copy = myfavourite.SongsPoet(p1);
+			p_copy = my_favourite.SongsPoet(p1);
 			cout << "Найденные песни: /название/ - /исполнитель/ - /поэт/ - /композитор/ - /альбом/ - /дата/" << endl;
 			for (int i = 0; i < p_copy.size(); i++)
 				cout << i + 1 << "." << p_copy[i].GetName() << " - " << p_copy[i].GetExecutor() << " - " << p_copy[i].GetPoet() << " - " << p_copy[i].GetCompouser() << " - " << p_copy[i].GetAlbum() << " - " << p_copy[i].GetData().number << "." << p_copy[i].GetData().month << "." << p_copy[i].GetData().year << endl;
@@ -495,7 +504,7 @@ int main()
 			cout << "Введите композитора:";
 			cin.ignore();
 			getline(cin, p1);
-			p_copy = myfavourite.SongsCompouser(p1);
+			p_copy = my_favourite.SongsCompouser(p1);
 			cout << "Найденные песни: /название/ - /исполнитель/ - /поэт/ - /композитор/ - /альбом/ - /дата/" << endl;
 			for (int i = 0; i < p_copy.size(); i++)
 				cout << i + 1 << "." << p_copy[i].GetName() << " - " << p_copy[i].GetExecutor() << " - " << p_copy[i].GetPoet() << " - " << p_copy[i].GetCompouser() << " - " << p_copy[i].GetAlbum() << " - " << p_copy[i].GetData().number << "." << p_copy[i].GetData().month << "." << p_copy[i].GetData().year << endl;
@@ -506,7 +515,7 @@ int main()
 			cout << "Введите исполнителя:";
 			cin.ignore();
 			getline(cin, p1);
-			p_copy = myfavourite.SongsExecutor(p1);
+			p_copy = my_favourite.SongsExecutor(p1);
 			cout << "Найденные песни: /название/ - /исполнитель/ - /поэт/ - /композитор/ - /альбом/ - /дата/" << endl;
 			for (int i = 0; i < p_copy.size(); i++)
 				cout << i + 1 << "." << p_copy[i].GetName() << " - " << p_copy[i].GetExecutor() << " - " << p_copy[i].GetPoet() << " - " << p_copy[i].GetCompouser() << " - " << p_copy[i].GetAlbum() << " - " << p_copy[i].GetData().number << "." << p_copy[i].GetData().month << "." << p_copy[i].GetData().year << endl;
@@ -514,7 +523,7 @@ int main()
 		}
 		case 8:
 		{
-			cout << "Количество песен в песеннике : " << myfavourite.GetVector().size() << endl;
+			cout << "Количество песен в песеннике : " << my_favourite.GetVector().size() << endl;
 			break;
 		}
 		case 9:
@@ -522,7 +531,7 @@ int main()
 			cout << "Введите номер песни в песеннике, которую хотите удалить:";
 			cin >> m;
 			l = 0;
-			v_copy = myfavourite.GetVector();
+			v_copy = my_favourite.GetVector();
 			for (int i = 1; i <= v_copy.size(); i++)
 			{
 				if (i == m)
@@ -536,14 +545,14 @@ int main()
 				cout << "Такой песни не существует. \n" << endl;
 			else
 			{
-				myfavourite.DeleteSong(v_copy[l - 1]);
+				my_favourite.DeleteSong(v_copy[l - 1]);
 				cout << "Успешно!" << endl;
 			}
 			break;
 		}
 		case 10:
 		{
-			myfavourite.OutFile();
+			my_favourite.OutFile();
 			cout << "Успешно!\n" << endl;
 			break;
 		}
@@ -556,7 +565,7 @@ int main()
 			cout << "Введите название текстового файла(укажите .txt):";
 			cin.ignore();
 			getline(cin, s);
-			q = myfavourite.InFile(s);
+			q = my_favourite.InFile(s);
 			if (q)
 				cout << "Успешно!" << endl;
 			else
