@@ -124,11 +124,11 @@ public:
 		v.push_back(s);
 		sort(v.begin(), v.end());
 	}
-	void ChangeSong(int number, string _name_of_song, string _poet, string _compouser, string _executor, string _name_of_album, dataofsong _date)//изменить выбранную песню
+	void ChangeSong(string n, string e, string _name_of_song, string _poet, string _compouser, string _executor, string _name_of_album, dataofsong _date)//изменить выбранную песню
 	{
 		for (int i = 0; i < v.size(); i++)
 		{
-			if (i + 1 == number)
+			if ((*this).Search(n, e) == v[i])
 			{
 				v[i].Change(_name_of_song, _poet, _compouser, _executor, _name_of_album, _date);
 				break;
@@ -343,7 +343,7 @@ int main()
 	string n1, p1, c1, e1, alb1;
 	dataofsong d, d1;
 	setlocale(LC_ALL, "Russian");
-	int a, b, k, l, m, check = 1;
+	int a, b, l, m, check = 1;
 	vector<Song> my_music, v_copy, v_copy1, p_copy;
 	Music my_favourite(my_music);
 	SetConsoleOutputCP(1251);
@@ -425,15 +425,16 @@ int main()
 		}
 		case 3:
 		{
-			l = 0;
-			cout << "Введите номер песни в списке, корорую хотите изменить:" << endl;
-			cin >> k;
-			if (k <= 0 || k > my_favourite.NumberSong())
-				cout << "Такой песни не существует.\n" << endl;
+			cout << "Введите название той песни, которую хотите изменить:";
+			cin.ignore();
+			getline(cin, n);
+			cout << "Введите исполнителя той песни, которую хотите изменить:";
+			getline(cin, e);
+			if (my_favourite.Search(n, e).GetName() == "" || my_favourite.Search(n, e).GetExecutor() == "")
+				cout << "Такой песни не существует." << endl;
 			else
 			{
 				cout << "Введите новое название песни:";
-				cin.ignore();
 				getline(cin, n1);
 				cout << "Введите нового поэта песни:";
 				getline(cin, p1);
@@ -472,7 +473,7 @@ int main()
 				cin >> d1.month;
 				cout << "Год:";
 				cin >> d1.year;
-				my_favourite.ChangeSong(k, n1, p1, c1, e1, alb1, d1);
+				my_favourite.ChangeSong(n, e, n1, p1, c1, e1, alb1, d1);
 			}
 			break;
 		}
