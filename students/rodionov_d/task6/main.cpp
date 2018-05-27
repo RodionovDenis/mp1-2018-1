@@ -2913,6 +2913,6 @@ int main()
 		}
 
 	}
-	else
-		return 0;
+	system("pause");
+	return 0;
 }
